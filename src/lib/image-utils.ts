@@ -18,8 +18,10 @@ export async function uploadImage(
   bucket: string = "recipe-images"
 ): Promise<string> {
   const compressed = await compressImage(file);
+  const { data: { user } } = await supabase.auth.getUser();
+  const userId = user?.id || "anonymous";
   const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.jpg`;
-  const filePath = `${fileName}`;
+  const filePath = `${userId}/${fileName}`;
 
   const { error } = await supabase.storage
     .from(bucket)
